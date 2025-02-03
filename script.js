@@ -1,6 +1,6 @@
 // Import Firebase modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, increment, collection, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -63,15 +63,17 @@ async function vote(costume) {
         voteButton2.disabled = true;
 
         // Update votes in Firestore
-        const costumeRef = db.collection("votes").doc(costume.id.toString());
-        const doc = await costumeRef.get();
+        const costumeRef = doc(db, "votes", costume.id.toString());
+        const docSnap = await getDoc(costumeRef);
 
-        if (doc.exists) {
-            await costumeRef.update({
-                votes: firebase.firestore.FieldValue.increment(1),
+        if (docSnap.exists()) {
+            // If the document exists, increment the vote count
+            await updateDoc(costumeRef, {
+                votes: increment(1),
             });
         } else {
-            await costumeRef.set({
+            // If the document doesn't exist, create it with an initial vote count of 1
+            await setDoc(costumeRef, {
                 id: costume.id,
                 votes: 1,
             });
@@ -105,10 +107,8 @@ async function updateLeaderboard() {
 
     try {
         // Fetch all votes from Firestore, ordered by votes in descending order
-        const votesSnapshot = await db
-            .collection("votes")
-            .orderBy("votes", "desc")
-            .get();
+        const votesQuery = query(collection(db, "votes"), orderBy("votes", "desc"));
+        const votesSnapshot = await getDocs(votesQuery);
 
         leaderboardList.innerHTML = ""; // Clear loading state
         votesSnapshot.forEach((doc) => {

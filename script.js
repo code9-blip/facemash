@@ -28,88 +28,88 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 // DOM elements
-const costumeImage1 = document.getElementById("costumeImage1");
-const costumeImage2 = document.getElementById("costumeImage2");
+const carImage1 = document.getElementById("carImage1");
+const carImage2 = document.getElementById("carImage2");
 const voteButton1 = document.getElementById("vote1");
 const voteButton2 = document.getElementById("vote2");
 const message = document.getElementById("message");
 const leaderboardList = document.getElementById("leaderboardList");
 
-let costumes = []; // Array to store costumes fetched from Firestore
-let currentPair = []; // Array to store the current pair of costumes being displayed
+let cars = []; // Array to store cars fetched from Firestore
+let currentPair = []; // Array to store the current pair of cars being displayed
 
-// Function to fetch costumes from Firestore
-async function fetchCostumes() {
+// Function to fetch cars from Firestore
+async function fetchcars() {
   try {
-    const costumesSnapshot = await getDocs(collection(db, "costumes"));
-    const costumesData = [];
-    costumesSnapshot.forEach((doc) => {
-      costumesData.push(doc.data());
+    const carsSnapshot = await getDocs(collection(db, "cars"));
+    const carsData = [];
+    carsSnapshot.forEach((doc) => {
+      carsData.push(doc.data());
     });
-    return costumesData;
+    return carsData;
   } catch (error) {
-    console.error("Error fetching costumes:", error);
+    console.error("Error fetching cars:", error);
     return [];
   }
 }
 
-// Function to get two random costumes
-function getRandomCostumes() {
-  if (costumes.length < 2) {
-    console.error("Not enough costumes to display.");
+// Function to get two random cars
+function getRandomcars() {
+  if (cars.length < 2) {
+    console.error("Not enough cars to display.");
     return;
   }
 
-  const randomIndex1 = Math.floor(Math.random() * costumes.length);
-  let randomIndex2 = Math.floor(Math.random() * costumes.length);
+  const randomIndex1 = Math.floor(Math.random() * cars.length);
+  let randomIndex2 = Math.floor(Math.random() * cars.length);
   while (randomIndex2 === randomIndex1) {
-    randomIndex2 = Math.floor(Math.random() * costumes.length);
+    randomIndex2 = Math.floor(Math.random() * cars.length);
   }
 
-  currentPair = [costumes[randomIndex1], costumes[randomIndex2]];
-  costumeImage1.src = currentPair[0].image;
-  costumeImage2.src = currentPair[1].image;
+  currentPair = [cars[randomIndex1], cars[randomIndex2]];
+  carImage1.src = currentPair[0].image;
+  carImage2.src = currentPair[1].image;
 
   // Add error handling for images
-  costumeImage1.onerror = function () {
+  carImage1.onerror = function () {
     this.src = "fallback.jpg"; // Fallback image if loading fails
     this.alt = "Failed to load image";
   };
-  costumeImage2.onerror = function () {
+  carImage2.onerror = function () {
     this.src = "fallback.jpg"; // Fallback image if loading fails
     this.alt = "Failed to load image";
   };
 }
 
 // Function to handle voting
-async function vote(costume) {
+async function vote(car) {
   try {
     // Disable buttons to prevent multiple votes
     voteButton1.disabled = true;
     voteButton2.disabled = true;
 
     // Update votes in Firestore
-    const costumeRef = doc(db, "votes", costume.id.toString());
-    const docSnap = await getDoc(costumeRef);
+    const carRef = doc(db, "votes", car.id.toString());
+    const docSnap = await getDoc(carRef);
 
     if (docSnap.exists()) {
       // If the document exists, increment the vote count
-      await updateDoc(costumeRef, {
+      await updateDoc(carRef, {
         votes: increment(1),
       });
     } else {
       // If the document doesn't exist, create it with an initial vote count of 1
-      await setDoc(costumeRef, {
-        id: costume.id,
+      await setDoc(carRef, {
+        id: car.id,
         votes: 1,
       });
     }
 
     // Show confirmation message
-    message.textContent = `You voted for Costume ${costume.id}!`;
+    message.textContent = `You voted for car ${car.id}!`;
     setTimeout(() => {
       message.textContent = "";
-      getRandomCostumes(); // Load a new pair of costumes
+      getRandomcars(); // Load a new pair of cars
       voteButton1.disabled = false; // Re-enable buttons
       voteButton2.disabled = false;
     }, 2000);
@@ -140,13 +140,13 @@ async function updateLeaderboard() {
 
       // Create image element
       const img = document.createElement("img");
-      const costume = costumes.find((c) => c.id === parseInt(doc.id));
-      img.src = costume ? costume.image : "fallback.jpg"; // Use fallback if costume not found
-      img.alt = `Costume ${doc.id}`;
+      const car = cars.find((c) => c.id === parseInt(doc.id));
+      img.src = car ? car.image : "fallback.jpg"; // Use fallback if car not found
+      img.alt = `car ${doc.id}`;
 
       // Create text element
       const span = document.createElement("span");
-      span.textContent = `Costume ${doc.id}: ${doc.data().votes} votes`;
+      span.textContent = `car ${doc.id}: ${doc.data().votes} votes`;
 
       // Append image and text to list item
       li.appendChild(img);
@@ -167,12 +167,12 @@ voteButton2.addEventListener("click", () => vote(currentPair[1]));
 
 // Initialize the app
 async function initializeApp() {
-  costumes = await fetchCostumes(); // Fetch costumes from Firestore
-  if (costumes.length > 0) {
-    getRandomCostumes(); // Load initial pair of costumes
+  cars = await fetchcars(); // Fetch cars from Firestore
+  if (cars.length > 0) {
+    getRandomcars(); // Load initial pair of cars
     updateLeaderboard(); // Load leaderboard on page load
   } else {
-    console.error("No costumes found in Firestore.");
+    console.error("No cars found in Firestore.");
   }
 }
 

@@ -77,8 +77,8 @@ button:hover {
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 .car span {
-    display: block;
-    margin-top: 10px;
-    font-size: 18px;
-    font-weight: bold;
+  display: block;
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: bold;
 }

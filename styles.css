@@ -1,67 +1,135 @@
-/* styles.css */
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
+  font-family: 'Arial', sans-serif;
+  background-color: #1e1e1e;
   margin: 0;
-  padding: 0;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
+  color: #fff;
+  overflow: auto;
 }
 
 .container {
   text-align: center;
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: #2c2c2c;
+  padding: 30px;
+  border-radius: 30px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  will-change: transform, opacity;
+  animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 h1 {
-  color: #333;
+  color: #ff6f61;
+  font-size: 3rem;
+  margin-bottom: 10px;
+  will-change: transform, opacity;
+  animation: slideIn 1s ease-in-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+p {
+  color: #00ffcc;
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  will-change: opacity;
+  animation: fadeIn 1.5s ease-in-out;
 }
 
 .cars {
   display: flex;
   justify-content: space-around;
   margin-top: 20px;
+  gap: 20px;
 }
 
 .car {
-  border: 1px solid #ddd;
-  border-radius: 10px;
+  border: 2px solid #ff6f61;
+  border-radius: 15px;
   padding: 10px;
   width: 45%;
+  background-color: #3a3a3a;
+  will-change: transform, box-shadow;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.car:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(255, 111, 97, 0.5);
 }
 
 .car img {
   max-width: 100%;
   border-radius: 10px;
+  will-change: transform;
+  transition: transform 0.3s ease;
+}
+
+.car img:hover {
+  transform: scale(1.1);
 }
 
 button {
   margin-top: 10px;
   padding: 10px 20px;
-  background-color: #007bff;
+  background-color: #ff6f61;
   color: #fff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  will-change: background-color, transform;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #ff3b2f;
+  transform: translateY(-3px);
 }
 
 #message {
   margin-top: 20px;
-  color: green;
+  color: #00ffcc;
   font-weight: bold;
+  font-size: 1.2rem;
+  will-change: opacity;
+  animation: fadeIn 1s ease-in-out;
 }
 
 #leaderboard {
   margin-top: 30px;
+  will-change: opacity;
+  animation: fadeIn 2s ease-in-out;
+}
+
+#leaderboard h2 {
+  color: #ff6f61;
+  font-size: 2rem;
+  margin-bottom: 10px;
 }
 
 #leaderboardList {
@@ -70,15 +138,64 @@ button:hover {
 }
 
 #leaderboardList li {
-  background-color: #f9f9f9;
-  margin: 5px 0;
-  padding: 10px;
-  border-radius: 5px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  background-color: #3a3a3a;
+  margin: 10px 0;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  will-change: transform, box-shadow;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+
+#leaderboardList li:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(255, 111, 97, 0.5);
+}
+
 .car span {
   display: block;
   margin-top: 10px;
-  font-size: 18px;
+  font-size: 1.2rem;
   font-weight: bold;
+  color: #00ffcc;
+  will-change: opacity;
+  animation: fadeIn 1s ease-in-out;
+}
+
+#searchBar {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+  height: 6vh;
+}
+
+#searchInput {
+  padding: 10px 5px;
+  width: 300px;
+  border: 2px solid #00ffcc;
+  border-radius: 5px;
+  font-size: 15px;
+  height: 3vh;
+}
+
+#searchButton {
+  padding: 10px 20px;
+  margin-left: 10px;
+  background-color: #00ffcc;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  align-items: center;
+}
+
+#searchButton:hover {
+  background-color: #00ccaa;
+}
+
+footer {
+  font-family: 'Helvetica', sans-serif;
+  background: linear-gradient(135deg, var(--background-color), #1a9f70);
+  padding: 2px;
+  text-align: center;
 }

@@ -64,16 +64,17 @@ p {
 
 .cars {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between; /* Use space-between for better spacing */
   margin-top: 20px;
-  gap: 20px;
+  gap: 10px; /* Reduce gap for smaller screens */
+  width: 100%; /* Ensure cars container takes full width */
 }
 
 .car {
   border: 2px solid #ff6f61;
   border-radius: 15px;
   padding: 10px;
-  width: 45%;
+  width: 48%; /* Adjust width to fit side by side */
   background-color: #3a3a3a;
   will-change: transform, box-shadow;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -209,11 +210,11 @@ footer {
   }
 
   .cars {
-    gap: 10px; /* Reduce gap between cars for smaller screens */
+    gap: 5px; /* Further reduce gap for smaller screens */
   }
 
   .car {
-    width: 48%; /* Slightly reduce width to fit side by side */
+    width: 48%; /* Ensure cars stay side by side */
   }
 
   #searchInput {

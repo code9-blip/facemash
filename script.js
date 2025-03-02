@@ -84,6 +84,8 @@ function shuffleArray(array) {
 }
 
 // Get a random pair of cars
+// Get a random pair of cars
+// Get a random pair of cars
 function getRandomPair() {
     if (remainingPairs.length === 0) {
         // If no pairs are left, reset the list
@@ -109,13 +111,21 @@ function getRandomPair() {
 
     // Add error handling for images
     carImage1.onerror = function () {
-        this.src = "fallback.jpg"; // Fallback image if the original fails to load
-        this.alt = "Failed to load image";
+        console.error(`Failed to load image: ${this.src}`);
+        handleImageError();
     };
     carImage2.onerror = function () {
-        this.src = "fallback.jpg"; // Fallback image if the original fails to load
-        this.alt = "Failed to load image";
+        console.error(`Failed to load image: ${this.src}`);
+        handleImageError();
     };
+}
+
+// Handle image loading errors
+function handleImageError() {
+    console.log("Image failed to load. Generating a new pair...");
+
+    // Skip the current pair and generate a new one
+    getRandomPair();
 }
 
 // Handle voting
@@ -170,7 +180,7 @@ async function vote(car) {
 async function searchCar() {
     const searchTerm = searchInput.value.trim().toLowerCase();
     if (!searchTerm) {
-        message.textContent = "Please enter a USERNAME name to search.";
+        message.textContent = "Please enter a USERNAME to search.";
         setTimeout(() => {
             message.textContent = "";
         }, 2000);

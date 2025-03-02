@@ -350,3 +350,38 @@ footer {
   margin: 20px 0;
   font-style: italic;
 }
+/* Contact Button Styles */
+.contact-button {
+  display: inline-block;
+  margin: 20px 0;
+  padding: 10px 20px;
+  background-color: #ff6f61;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.contact-button:hover {
+  background-color: #ff3b2f;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(255, 111, 97, 0.3);
+}
+/* Add Yourself to FaceMash Section */
+#addYourself {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #3a3a3a;
+  border-radius: 10px;
+  border: 2px solid #00ffcc;
+  color: #00ffcc;
+  font-weight: bold;
+  text-align: center;
+  font-style: italic;
+}
+
+#addYourself p {
+  margin: 0;
+}

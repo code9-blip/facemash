@@ -215,7 +215,7 @@ async function searchCar() {
                 <img src="${car.image}" alt="${car.name}" style="width: 200px; margin-top: 10px;">
             `).join("<hr>");
         } else {
-            message.textContent = "No cars found with that name.";
+            message.textContent = "No Baddie found with that name.";
             setTimeout(() => {
                 message.textContent = "";
             }, 2000);

@@ -170,7 +170,7 @@ async function vote(car) {
 async function searchCar() {
     const searchTerm = searchInput.value.trim().toLowerCase();
     if (!searchTerm) {
-        message.textContent = "Please enter a car name to search.";
+        message.textContent = "Please enter a USERNAME name to search.";
         setTimeout(() => {
             message.textContent = "";
         }, 2000);

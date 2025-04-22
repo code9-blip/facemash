@@ -171,13 +171,36 @@
             padding: 1rem;
         }
 
+
         .face-image {
             width: 100%;
             height: auto;
-            max-height: 350px;
+            max-height: 450px;
+            /* Increased from 350px */
+            min-height: 300px;
+            /* Added to ensure minimum size */
             border-radius: 10px;
-            object-fit: contain;
+            object-fit: cover;
+            /* Changed from 'contain' to 'cover' to fill more space */
             transition: transform 0.3s ease;
+        }
+
+        /* Adjust mobile sizes to match new proportions */
+        @media (max-width: 768px) {
+            .face-image {
+                max-height: 350px;
+                /* Increased from 250px */
+                min-height: 250px;
+                /* Added */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .face-image {
+                max-height: 280px;
+                /* Increased from 200px */
+                min-height: 200px;
+            }
         }
 
         .face-card:hover .face-image {

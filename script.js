@@ -261,6 +261,15 @@ async function updateLeaderboard() {
         leaderboardList.innerHTML = "<li>Failed to load leaderboard. Please try again.</li>";
     }
 }
+document.getElementById('searchButton').addEventListener('click', function () {
+    const searchMessage = document.getElementById('searchMessage');
+    searchMessage.classList.add('show');
+
+    // Hide the message after 3 seconds
+    setTimeout(() => {
+        searchMessage.classList.remove('show');
+    }, 3000);
+});
 
 // Event listeners
 voteButton1.addEventListener("click", () => vote(currentPair[0]));

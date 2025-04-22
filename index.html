@@ -147,7 +147,6 @@
         .face-card {
             flex: 1;
             min-width: 45%;
-            /* Ensures two cards stay side-by-side */
             background-color: var(--card-bg);
             border-radius: 15px;
             overflow: hidden;
@@ -168,7 +167,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 1rem;
+            padding: 0.5rem;
         }
 
 
@@ -399,6 +398,21 @@
             box-shadow: 0 8px 25px rgba(225, 48, 108, 0.4);
         }
 
+        .search-message {
+            text-align: center;
+            padding: 0.5rem;
+            margin-top: -1rem;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .search-message.show {
+            opacity: 1;
+        }
+
         /* Mobile Optimization for Side-by-Side */
         @media (max-width: 768px) {
             .container {
@@ -486,6 +500,7 @@
                 <i class="fas fa-search"></i>
             </button>
         </div>
+        <div class="search-message" id="searchMessage">Scroll down to see results</div>
 
         <!-- Side-by-Side Face Comparison - Always stays side by side -->
         <div class="comparison-container">

@@ -8,66 +8,511 @@
         window.dataLayer = window.dataLayer || [];
         function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
-
         gtag('config', 'G-SEJRB55ESS');
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FaceMash</title>
     <link rel="icon" href="car3.jpg" type="image/png">
-    <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #FF4757;
+            --secondary-color: #1E90FF;
+            --accent-color: #2ED573;
+            --dark-bg: #1E1E2E;
+            --card-bg: #2D2D44;
+            --text-color: #F1F2F6;
+            --text-muted: #A4B0BE;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: linear-gradient(145deg, #23233A, #1E1E2E);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            position: relative;
+            display: inline-block;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 2px;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+
+        .notice {
+            background-color: rgba(255, 71, 87, 0.2);
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--primary-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .notice i {
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #FF6B81;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 71, 87, 0.4);
+        }
+
+        /* Face Comparison Section - Always Side by Side */
+        .comparison-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            /* Allows horizontal scrolling on mobile */
+            -webkit-overflow-scrolling: touch;
+            /* Smooth scrolling on iOS */
+            padding-bottom: 10px;
+            /* Space for scrollbar */
+        }
+
+        .face-card {
+            flex: 1;
+            min-width: 45%;
+            /* Ensures two cards stay side-by-side */
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            min-height: 400px;
+        }
+
+        .face-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .face-image-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .face-image {
+            width: 100%;
+            height: auto;
+            max-height: 350px;
+            border-radius: 10px;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        .face-card:hover .face-image {
+            transform: scale(1.03);
+        }
+
+        .face-info {
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .face-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 1rem;
+        }
+
+        .vote-btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            max-width: 200px;
+        }
+
+        .vote-btn:hover {
+            background-color: #FF6B81;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 71, 87, 0.4);
+        }
+
+        /* Search Bar */
+        .search-container {
+            display: flex;
+            margin-bottom: 2rem;
+            position: relative;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            border: none;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            font-size: 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            box-shadow: 0 5px 20px rgba(30, 144, 255, 0.3);
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            bottom: 5px;
+            width: 50px;
+            border-radius: 50px;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            background-color: #1C86EE;
+            transform: scale(0.95);
+        }
+
+        /* Message Display */
+        .message {
+            text-align: center;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            background-color: rgba(46, 213, 115, 0.2);
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        /* Original Leaderboard Style */
+        #leaderboard {
+            margin-top: 30px;
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        #leaderboard h2 {
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        #totalVotes {
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        #leaderboardList {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #leaderboardList li {
+            background-color: rgba(255, 255, 255, 0.05);
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        #leaderboardList li:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(255, 71, 87, 0.3);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: auto;
+            background-color: var(--card-bg);
+            color: var(--text-muted);
+        }
+
+        .footer-heart {
+            color: var(--primary-color);
+            animation: heartbeat 1.5s infinite;
+        }
+
+        @keyframes heartbeat {
+            0% {
+                transform: scale(1);
+            }
+
+            25% {
+                transform: scale(1.1);
+            }
+
+            50% {
+                transform: scale(1);
+            }
+
+            75% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Instagram Icon */
+        .social-icon {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 8px 25px rgba(225, 48, 108, 0.4);
+        }
+
+        /* Mobile Optimization for Side-by-Side */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+                border-radius: 0;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .comparison-container {
+                gap: 0.5rem;
+                padding-bottom: 5px;
+            }
+
+            .face-card {
+                min-width: 48%;
+                /* Slightly less than half to account for gap */
+                min-height: 350px;
+            }
+
+            .face-image {
+                max-height: 250px;
+            }
+
+            .search-container {
+                flex-direction: row;
+                /* Keep search bar horizontal */
+            }
+
+            .search-btn {
+                position: absolute;
+                /* Maintain absolute positioning */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .face-card {
+                min-height: 300px;
+            }
+
+            .face-image {
+                max-height: 200px;
+            }
+
+            .face-name {
+                font-size: 1.1rem;
+            }
+
+            .vote-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
 </head>
 
 <body>
     <!-- Instagram Icon -->
-
+    <a href="https://www.instagram.com/code9_blip/" target="_blank" class="social-icon">
+        <i class="fab fa-instagram"></i>
+    </a>
 
     <div class="container">
-        <a href="https://www.instagram.com/code9_blip/" target="_blank" id="instagramIcon">
-            <i class="fab fa-instagram"></i>
-        </a>
         <h1>FaceMash</h1>
-        <p style="color: #00ffcc;">Vote for the Best!</p>
-        <P style="color: red;">Must Read👇🏻</P>
+        <p class="tagline">Who's Hotter? Click to Choose!</p>
+        <a href="www.wikipedia.com" style="text-decoration: none;">
+            <div class="notice">
+                <i class="fas fa-exclamation-circle"></i>
+                <p>Must Read: Vote fairly and respect everyone</p>
 
-        <!-- Contact Button -->
-        <a href="contact.html" class="contact-button">About Me/Report Issue/Remove Images</a>
+            </div>
+        </a>
 
-
-        <!-- Add Search Bar -->
-        <div id="searchBar">
-            <input type="text" id="searchInput" placeholder="Search here (Enter Insta Username)">
-            <button id="searchButton">Search</button>
+        <div class="action-buttons">
+            <a href="contact.html" class="btn btn-primary">
+                <i class="fas fa-info-circle"></i> About me/Report/Remove
+            </a>
         </div>
 
-        <!-- Car Display Section -->
-        <div class="cars">
-            <div class="car" id="car1">
-                <img src="" alt="car 1" id="carImage1">
-                <span id="carName1"></span>
-                <button id="vote1">Vote</button>
+        <div class="search-container">
+            <input type="text" class="search-input" id="searchInput" placeholder="Search by Instagram username...">
+            <button class="search-btn" id="searchButton">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+
+        <!-- Side-by-Side Face Comparison - Always stays side by side -->
+        <div class="comparison-container">
+            <div class="face-card" id="car1">
+                <div class="face-image-container">
+                    <img src="" alt="Face 1" class="face-image" id="carImage1">
+                </div>
+                <div class="face-info">
+                    <h3 class="face-name" id="carName1">Loading...</h3>
+                    <button class="vote-btn" id="vote1">
+                        <i class="fas fa-thumbs-up"></i> Vote
+                    </button>
+                </div>
             </div>
-            <div class="car" id="car2">
-                <img src="" alt="car 2" id="carImage2">
-                <span id="carName2"></span>
-                <button id="vote2">Vote</button>
+
+            <div class="face-card" id="car2">
+                <div class="face-image-container">
+                    <img src="" alt="Face 2" class="face-image" id="carImage2">
+                </div>
+                <div class="face-info">
+                    <h3 class="face-name" id="carName2">Loading...</h3>
+                    <button class="vote-btn" id="vote2">
+                        <i class="fas fa-thumbs-up"></i> Vote
+                    </button>
+                </div>
             </div>
         </div>
 
-        <!-- Message Display -->
-        <p id="message"></p>
+        <div class="message" id="message"></div>
 
-        <!-- Leaderboard Section -->
+        <!-- Original Leaderboard Style -->
         <div id="leaderboard">
             <h2>Leaderboard</h2>
-            <p>Total Votes: <span id="totalVotes">0</span></p>
-            <ul id="leaderboardList"></ul>
+            <p style="text-align: center;">Total Votes: <span id="totalVotes">0</span></p>
+            <ul id="leaderboardList">
+                <!-- Sample items - will be replaced by JavaScript -->
+                <li>
+                    <span style="color: var(--primary-color); font-weight: bold;">1.</span>
+                    Top Contestant - <span style="color: var(--secondary-color);">150 votes</span>
+                </li>
+                <li>
+                    <span style="color: var(--primary-color); font-weight: bold;">2.</span>
+                    Second Place - <span style="color: var(--secondary-color);">120 votes</span>
+                </li>
+            </ul>
         </div>
     </div>
 
     <footer>
-        <p style="color: rgb(58, 203, 79);">&copy;2025 FaceMash. Made with ❤️ by BATMAN</p>
+        <p>&copy;2025 FaceMash. Made with <span class="footer-heart">❤️</span> by BATMAN</p>
     </footer>
 
     <!-- Firebase SDK -->

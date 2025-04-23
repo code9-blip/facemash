@@ -31,6 +31,7 @@ const searchInput = document.getElementById("searchInput");
 const searchButton = document.getElementById("searchButton");
 const leaderboardList = document.getElementById("leaderboardList");
 const totalVotesElement = document.getElementById("totalVotes");
+const searchResults = document.getElementById("searchResults");
 
 let allPairs = []; // All possible unique pairs
 let remainingPairs = []; // Pairs that haven't been shown yet
@@ -84,8 +85,6 @@ function shuffleArray(array) {
 }
 
 // Get a random pair of cars
-// Get a random pair of cars
-// Get a random pair of cars
 function getRandomPair() {
     if (remainingPairs.length === 0) {
         // If no pairs are left, reset the list
@@ -132,8 +131,8 @@ function handleImageError() {
 async function vote(car) {
     try {
         // Disable buttons
-        voteButton1.disabled = true;
-        voteButton2.disabled = true;
+        if (voteButton1) voteButton1.disabled = true;
+        if (voteButton2) voteButton2.disabled = true;
 
         // Update votes in Firestore
         const carRef = doc(db, "votes", car.id.toString());
@@ -158,12 +157,15 @@ async function vote(car) {
             message.textContent = "";
         }, 2000);
 
-        // Immediately load a new pair of cars
-        getRandomPair();
+
+        // Immediately load a new pair of cars if this is from the main voting
+        if (voteButton1 && voteButton2) {
+            getRandomPair();
+        }
 
         // Re-enable buttons
-        voteButton1.disabled = false;
-        voteButton2.disabled = false;
+        if (voteButton1) voteButton1.disabled = false;
+        if (voteButton2) voteButton2.disabled = false;
 
         // Update the leaderboard
         updateLeaderboard();
@@ -171,8 +173,8 @@ async function vote(car) {
         console.error("Error voting:", error);
         message.textContent = "Failed to vote. Please try again.";
         // Re-enable buttons in case of error
-        voteButton1.disabled = false;
-        voteButton2.disabled = false;
+        if (voteButton1) voteButton1.disabled = false;
+        if (voteButton2) voteButton2.disabled = false;
     }
 }
 
@@ -202,27 +204,42 @@ async function searchCar() {
         const foundCars = cars
             .filter(car => car.name.toLowerCase().includes(searchTerm))
             .map(car => ({
-                name: car.name,
+                ...car,
                 votes: voteMap.get(car.id.toString()) || 0, // Default to 0 if no votes
-                image: car.image,
             }));
 
         if (foundCars.length > 0) {
             // Display all matching cars
-            message.innerHTML = foundCars.map(car => `
-                <strong>${car.name}</strong><br>
-                Votes: ${car.votes}<br>
-                <img src="${car.image}" alt="${car.name}" style="width: 200px; margin-top: 10px;">
-            `).join("<hr>");
+            searchResults.innerHTML = foundCars.map(car => `
+                <div class="search-result-item">
+                    <img src="${car.image}" alt="${car.name}" class="search-result-image">
+                    <div class="search-result-info">
+                        <h3>${car.name}</h3>
+                        <p>Votes: ${car.votes}</p>
+                        <button class="vote-button" data-id="${car.id}" data-name="${car.name}">Vote for ${car.name}</button>
+                    </div>
+                </div>
+            `).join("");
+
+            // Add event listeners to the vote buttons
+            document.querySelectorAll('.vote-button').forEach(button => {
+                button.addEventListener('click', async function () {
+                    const carId = this.getAttribute('data-id');
+                    const carName = this.getAttribute('data-name');
+                    const car = cars.find(c => c.id.toString() === carId);
+                    if (car) {
+                        await vote(car);
+                        searchResults.innerHTML = `<p>You voted for ${carName}! Searching again...</p>`;
+                        searchCar(); // Refresh the search results
+                    }
+                });
+            });
         } else {
-            message.textContent = "No Baddie found with that name.";
-            setTimeout(() => {
-                message.textContent = "";
-            }, 2000);
+            searchResults.innerHTML = "<p>No Baddie found with that name.</p>";
         }
     } catch (error) {
         console.error("Error searching for car:", error);
-        message.textContent = "Failed to search. Please try again.";
+        searchResults.innerHTML = "<p>Failed to search. Please try again.</p>";
     }
 }
 
@@ -261,6 +278,9 @@ async function updateLeaderboard() {
         leaderboardList.innerHTML = "<li>Failed to load leaderboard. Please try again.</li>";
     }
 }
+
+
+
 document.getElementById('searchButton').addEventListener('click', function () {
     const searchMessage = document.getElementById('searchMessage');
     searchMessage.classList.add('show');
@@ -272,14 +292,16 @@ document.getElementById('searchButton').addEventListener('click', function () {
 });
 
 // Event listeners
-voteButton1.addEventListener("click", () => vote(currentPair[0]));
-voteButton2.addEventListener("click", () => vote(currentPair[1]));
-searchButton.addEventListener("click", searchCar);
-searchInput.addEventListener("keypress", (event) => {
+if (voteButton1) voteButton1.addEventListener("click", () => vote(currentPair[0]));
+if (voteButton2) voteButton2.addEventListener("click", () => vote(currentPair[1]));
+if (searchButton) searchButton.addEventListener("click", searchCar);
+if (searchInput) searchInput.addEventListener("keypress", (event) => {
     if (event.key === "Enter") {
         searchCar();
     }
 });
+
+
 
 // Load cars data and initialize the app
 loadCars();
